@@ -1,15 +1,37 @@
 package com.jihoon.firstproject.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+class ParamDto {
+    private String data1;
+    private String data2;
+
+    public String getData1() {
+        return this.data1;
+    }
+    
+    public String getData2() {
+        return this.data2;
+    }
+
+    public void setData1(String data1) {
+        this.data1 = data1;
+    }
+    
+    public void setData2(String data2) {
+        this.data2 = data2;
+    }
+}
 
 //* Rest API를 위한 Controller임을 명시해주는 어노테이션 
 //* @Controller + @ResponseBody = @RestController 
@@ -67,6 +89,25 @@ public class RestApiController {
     }
 
     //* @RequestParam 로 Get, Delete Method에서 데이터 받기 
-    
+    //* 완전 path 뒤에 ?name=value[&...] 형식에 맞춰 name에 해당하는 value를 받아오는 형식 
+    @GetMapping("request-param")
+    public String requestParam(
+        @RequestParam String data1,
+        @RequestParam String data2
+        // ParamDto dto
+    ) {
+        return data1 + data2 + " 데이터를 입력받았습니다.";
+        // return dto.getData1() + dto.getData2() + " 데이터를 입력받았습니다.";
+    }
+
+    //* @RequestBody 로 Post, Put, Patch Method에서 데이터 받기 
+    //* Request Body에 있는 데이터를 받기 위한 어노테이션 
+    @PostMapping("request-body")
+    public ResponseEntity<ParamDto> requestBody(
+        // @RequestBody String data
+        @RequestBody ParamDto dto
+    ) {
+        return ResponseEntity.status(408).body(dto);
+    }
 
 }

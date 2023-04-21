@@ -1,5 +1,8 @@
 package com.jihoon.firstproject.controller;
 
+import javax.validation.Valid;
+
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jihoon.firstproject.dto.request.ExampleDto;
+import com.jihoon.firstproject.dto.response.ExampleResponseDto;
 
 class ParamDto {
     private String data1;
@@ -113,8 +117,20 @@ public class RestApiController {
     }
 
     @PostMapping("lombok")
-    public String lombok(@RequestBody ExampleDto requestBody) {
-        return requestBody.toString();
+    public ExampleResponseDto lombok(
+        @Valid @RequestBody ExampleDto requestBody
+    ) {
+        String data1 = requestBody.getParameter1();
+        String data2 = requestBody.getParameter2();
+        String data3 = requestBody.getParameter3();
+
+        // ExampleResponseDto responseData = 
+        //     new ExampleResponseDto(data1, data2, data3);
+
+        ExampleResponseDto responseData = 
+            ExampleResponseDto.builder().data1(data1).build();
+
+        return responseData;
     }
 
 }

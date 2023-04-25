@@ -2,6 +2,7 @@ package com.jihoon.firstproject.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jihoon.firstproject.dto.request.ExampleDto;
 import com.jihoon.firstproject.dto.response.ExampleResponseDto;
+import com.jihoon.firstproject.service.RestApiService;
 
 class ParamDto {
     private String data1;
@@ -46,6 +48,12 @@ class ParamDto {
 //* URL path 패턴을 지정해서 해당 패턴이면 지정한 클래스로 처리하도록 함 
 @RequestMapping("api")
 public class RestApiController {
+
+    private RestApiService restApiService;
+
+    public RestApiController(RestApiService restApiService) {
+        this.restApiService = restApiService;
+    }
     
     @RequestMapping(method={RequestMethod.GET}, value="hello2")
     public String hello2() {
@@ -57,7 +65,7 @@ public class RestApiController {
     //* @RequestMapping(method=RequestMethod.GET, value="get-method") 
     @GetMapping("get-method")
     public String getMethod() {
-        return "Response of Get Request";
+        return restApiService.getMethod();
     }
 
     //* Post Method @PostMapping 
@@ -65,7 +73,7 @@ public class RestApiController {
     //* @RequestMapping(method=RequestMethod.POST, value="post-method") 
     @PostMapping("post-method")
     public String postMethod() {
-        return "Response of Post Request";
+        return restApiService.postMethod();
     }
 
     //* Patch Method @PatchMapping 
@@ -73,7 +81,7 @@ public class RestApiController {
     //* @RequestMapping(method=RequestMethod.PATCH, value="patch-method")
     @PatchMapping("patch-method")
     public String patchMethod() {
-        return "Response of Patch Request";
+        return restApiService.patchMethod();
     }
 
     //* Delete Method @DeleteMapping 
@@ -81,7 +89,7 @@ public class RestApiController {
     //* @RequestMapping(method=RequestMethod.DELETE, value="delete-method")
     @DeleteMapping("delete-method")
     public String deleteMethod() {
-        return "Response of Delete Request";
+        return restApiService.deleteMethod();
     }
 
     //* PathVariable() 로 Get, Delete Method에서 데이터 받기 
@@ -128,7 +136,7 @@ public class RestApiController {
         //     new ExampleResponseDto(data1, data2, data3);
 
         ExampleResponseDto responseData = 
-            ExampleResponseDto.builder().data1(data1).build();
+            ExampleResponseDto.builder().data1(data1 + data2).build();
 
         return responseData;
     }

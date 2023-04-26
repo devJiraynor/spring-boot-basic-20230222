@@ -1,18 +1,25 @@
 package com.jihoon.board.controller;
 
-import org.apache.catalina.connector.Response;
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.jihoon.board.dto.request.user.PostUserRequestDto;
+import com.jihoon.board.dto.response.ResponseDto;
 
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
     
     @PostMapping("")
-    public ResponseEntity<?> postUser() {
-        
+    public ResponseEntity<ResponseDto> postUser(
+        @Valid @RequestBody PostUserRequestDto requestBody
+    ) {
+        return null;
     }
 
 }

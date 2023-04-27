@@ -1,5 +1,7 @@
 package com.jihoon.board.service.implement;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -8,15 +10,56 @@ import com.jihoon.board.dto.request.board.PostBoardRequestDto;
 import com.jihoon.board.dto.response.ResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardListResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardResponseDto;
+import com.jihoon.board.entity.BoardEntity;
+import com.jihoon.board.repository.BoardRepository;
+import com.jihoon.board.repository.UserRepository;
 import com.jihoon.board.service.BoardService;
 
 @Service
 public class BoardServiceImplement implements BoardService {
 
+    private UserRepository userRepository;
+    private BoardRepository boardRepository;
+
+    @Autowired
+    public BoardServiceImplement(
+        UserRepository userRepository,
+        BoardRepository boardRepository
+    ) {
+        this.userRepository = userRepository;
+        this.boardRepository = boardRepository;
+    }
+
     @Override
     public ResponseEntity<ResponseDto> postBoard(PostBoardRequestDto dto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'postBoard'");
+        
+        ResponseDto body = null;
+
+        String boardWriterEmail = dto.getBoardWriterEmail();
+
+        try {
+            //* 존재하지 않는 유저 오류 반환 //
+            boolean existedUserEmail = userRepository.existsByEmail(boardWriterEmail);
+            if (!existedUserEmail) {
+                ResponseDto errorBody = new ResponseDto("NU", "Non-Existent User Email");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);
+            }
+
+            BoardEntity boardEntity = new BoardEntity(dto);
+            boardRepository.save(boardEntity);
+
+            body = new ResponseDto("SU", "Success");
+
+        } catch (Exception exception) {
+            //* 데이터베이스 오류 반환 //
+            exception.printStackTrace();
+            ResponseDto errorBody = new ResponseDto("DE", "Database Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);
+        }
+
+        //* 성공 반환 //
+        return ResponseEntity.status(HttpStatus.OK).body(body);
+
     }
 
     @Override

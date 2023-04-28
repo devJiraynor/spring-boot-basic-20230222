@@ -1,17 +1,25 @@
 package com.jihoon.board.service.implement;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.jihoon.board.common.util.CustomResponse;
 import com.jihoon.board.dto.request.board.PatchBoardRequestDto;
 import com.jihoon.board.dto.request.board.PostBoardRequestDto;
 import com.jihoon.board.dto.response.ResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardListResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardResponseDto;
 import com.jihoon.board.entity.BoardEntity;
+import com.jihoon.board.entity.CommentEntity;
+import com.jihoon.board.entity.LikyEntity;
+import com.jihoon.board.entity.UserEntity;
 import com.jihoon.board.repository.BoardRepository;
+import com.jihoon.board.repository.CommentRepository;
+import com.jihoon.board.repository.LikyRepository;
 import com.jihoon.board.repository.UserRepository;
 import com.jihoon.board.service.BoardService;
 
@@ -20,14 +28,20 @@ public class BoardServiceImplement implements BoardService {
 
     private UserRepository userRepository;
     private BoardRepository boardRepository;
+    private CommentRepository commentRepository;
+    private LikyRepository likyRepository;
 
     @Autowired
     public BoardServiceImplement(
         UserRepository userRepository,
-        BoardRepository boardRepository
+        BoardRepository boardRepository,
+        CommentRepository commentRepository,
+        LikyRepository likyRepository
     ) {
         this.userRepository = userRepository;
         this.boardRepository = boardRepository;
+        this.commentRepository = commentRepository;
+        this.likyRepository = likyRepository;
     }
 
     @Override
@@ -64,8 +78,29 @@ public class BoardServiceImplement implements BoardService {
 
     @Override
     public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBoard'");
+        
+        GetBoardResponseDto body = null;
+        ResponseDto errorBody = null;
+
+        try {
+
+            if (boardNumber == null) return CustomResponse.vaildationFaild();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return CustomResponse.notExistBoardNumber();
+
+            String boardWriterEmail = boardEntity.getWriterEmail();
+            UserEntity userEntity = userRepository.findByEmail(boardWriterEmail);
+            List<CommentEntity> commentEntities = commentRepository.findByBoardNumber(boardNumber);
+            List<LikyEntity> likyEntities = likyRepository.findByBoardNumber(boardNumber);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return CustomResponse.databaseError();
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(body);
+
     }
 
     @Override

@@ -71,7 +71,7 @@ class Comment {
         this.commentContent = commentEntity.getCommentContent();
         this.commentWriterNickname = commentEntity.getUserNickname();
         this.commentWriterProfileImageUrl = commentEntity.getUserProfileImageUrl();
-        this.commentWriteDatetime = commentEntity.getWrtieDatetime();
+        this.commentWriteDatetime = commentEntity.getWriteDatetime();
     }
 
     static List<Comment> createList(List<CommentEntity> commentEntities) {

@@ -80,7 +80,6 @@ public class BoardServiceImplement implements BoardService {
     public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
         
         GetBoardResponseDto body = null;
-        ResponseDto errorBody = null;
 
         try {
 
@@ -93,6 +92,8 @@ public class BoardServiceImplement implements BoardService {
             UserEntity userEntity = userRepository.findByEmail(boardWriterEmail);
             List<CommentEntity> commentEntities = commentRepository.findByBoardNumber(boardNumber);
             List<LikyEntity> likyEntities = likyRepository.findByBoardNumber(boardNumber);
+
+            body = new GetBoardResponseDto(boardEntity, userEntity, commentEntities, likyEntities);
 
         } catch (Exception exception) {
             exception.printStackTrace();

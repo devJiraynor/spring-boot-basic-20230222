@@ -115,6 +115,7 @@ public class BoardServiceImplement implements BoardService {
         try {
 
             List<BoardListResultSet> resultSet = boardRepository.getList();
+            System.out.println(resultSet.size());
             body = new GetBoardListResponseDto(resultSet);
 
         } catch (Exception exception) {
@@ -130,6 +131,9 @@ public class BoardServiceImplement implements BoardService {
         GetBoardListResponseDto body = null;
 
         try {
+
+            List<BoardListResultSet> resultSet = boardRepository.getTop3List();
+            body = new GetBoardListResponseDto(resultSet);
 
         } catch (Exception exception) {
             exception.printStackTrace();

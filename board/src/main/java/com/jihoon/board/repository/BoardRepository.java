@@ -32,8 +32,8 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
         "WHERE B.board_number = C.board_number " +
         "AND B.board_number = L.board_number " +
         "AND B.writer_email = U.email " +
-        "GROUP BY B.board_number" + 
-        "ORDER BY B.write_datetime DESC",
+        "GROUP BY B.board_number " + 
+        "ORDER BY boardWriteDatetime DESC",
         nativeQuery=true
     )
     public List<BoardListResultSet> getList();
@@ -56,7 +56,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
         "WHERE B.board_number = C.board_number " +
         "AND B.board_number = L.board_number " +
         "AND B.writer_email = U.email " +
-        "GROUP BY B.board_number" + 
+        "GROUP BY B.board_number " + 
         "ORDER BY likeCount DESC " +
         "LIMIT 3",
         nativeQuery=true

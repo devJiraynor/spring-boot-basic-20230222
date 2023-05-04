@@ -1,4 +1,4 @@
-package com.jihoon.firstproject.filter;
+package com.jihoon.board.filter;
 
 import java.io.IOException;
 
@@ -17,16 +17,16 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.jihoon.firstproject.provider.JwtTokenProvider;
+import com.jihoon.board.provider.JwtProvider;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
-
-    private JwtTokenProvider jwtTokenProvider;
+    
+    private JwtProvider jwtProvider;
 
     @Autowired
-    public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public JwtAuthenticationFilter(JwtProvider jwtProvider) {
+        this.jwtProvider = jwtProvider;
     }
 
     @Override
@@ -43,18 +43,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
 
-            String subject = jwtTokenProvider.validate(jwt);
+            String email = jwtProvider.validate(jwt);
 
-            AbstractAuthenticationToken authenticationToken = 
-                new UsernamePasswordAuthenticationToken(subject, null, AuthorityUtils.NO_AUTHORITIES);
+            AbstractAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(email, null, AuthorityUtils.NO_AUTHORITIES);
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
             SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
             securityContext.setAuthentication(authenticationToken);
-
             SecurityContextHolder.setContext(securityContext);
 
-        } catch(Exception exception) {
+        } catch (Exception exception) {
             exception.printStackTrace();
         }
 
@@ -64,7 +63,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private String parseToken(HttpServletRequest request) {
 
-        //* Request Header 중 "Authorization" : "Bearer eyJh..." 
         String token = request.getHeader("Authorization");
 
         boolean hasToken = 
@@ -72,14 +70,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             !token.equalsIgnoreCase("null");
         if (!hasToken) return null;
 
-        //* "Bearer eyJh..." 
         boolean isBearer = token.startsWith("Bearer ");
         if (!isBearer) return null;
 
-        //* "Bearer eyJh..." 
         String jwt = token.substring(7);
         return jwt;
 
     }
-    
+
 }

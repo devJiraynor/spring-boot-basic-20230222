@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jihoon.board.dto.request.board.PatchBoardRequestDto;
+import com.jihoon.board.dto.request.board2.PatchBoardRequestDto2;
 import com.jihoon.board.dto.request.board2.PostBoardRequestDto2;
 import com.jihoon.board.dto.response.ResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardListResponseDto;
@@ -69,17 +70,18 @@ public class Board2Controller {
     //* 5. 특정 게시물 수정 */
     @PatchMapping("")
     public ResponseEntity<ResponseDto> patchBoard(
-        @Valid @RequestBody PatchBoardRequestDto requestBody
+        @AuthenticationPrincipal String userEmail,
+        @Valid @RequestBody PatchBoardRequestDto2 requestBody
     ) {
         ResponseEntity<ResponseDto> response = 
-            boardService.patchBoard(requestBody);
+            boardService.patchBoard(userEmail, requestBody);
         return response;
     }
 
-    //* 6.특정 게시물 삭제 */
-    @DeleteMapping("/{userEmail}/{boardNumber}")
+    //* 6. 특정 게시물 삭제 */
+    @DeleteMapping("/{boardNumber}")
     public ResponseEntity<ResponseDto> deleteBoard(
-        @PathVariable("userEmail") String userEmail,
+        @AuthenticationPrincipal String userEmail,
         @PathVariable("boardNumber") Integer boardNumber
     ) {
         ResponseEntity<ResponseDto> response =

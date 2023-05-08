@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.jihoon.board.common.util.CustomResponse;
 import com.jihoon.board.dto.request.board.PatchBoardRequestDto;
 import com.jihoon.board.dto.request.board.PostBoardRequestDto;
+import com.jihoon.board.dto.request.board2.PatchBoardRequestDto2;
 import com.jihoon.board.dto.request.board2.PostBoardRequestDto2;
 import com.jihoon.board.dto.response.ResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardListResponseDto;
@@ -50,9 +51,12 @@ public class BoardServiceImplement implements BoardService {
     public ResponseEntity<ResponseDto> postBoard(PostBoardRequestDto dto) {
 
         String boardWriterEmail = dto.getBoardWriterEmail();
+        PostBoardRequestDto2 dto2 = new PostBoardRequestDto2(dto);
+
+        ResponseEntity<ResponseDto> response = postBoard(boardWriterEmail, dto2);
 
         //* 성공 반환 //
-        return ;
+        return response;
 
     }
 
@@ -156,8 +160,21 @@ public class BoardServiceImplement implements BoardService {
     @Override
     public ResponseEntity<ResponseDto> patchBoard(PatchBoardRequestDto dto) {
         
-        int boardNumber = dto.getBoardNumber();
         String userEmail = dto.getUserEmail();
+        PatchBoardRequestDto2 dto2 = new PatchBoardRequestDto2(dto);
+
+        ResponseEntity<ResponseDto> response = patchBoard(userEmail, dto2);
+
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> patchBoard(
+        String userEmail,
+        PatchBoardRequestDto2 dto
+    ) {
+        
+        int boardNumber = dto.getBoardNumber();
         String boardTitle = dto.getBoardTitle();
         String boardContent = dto.getBoardContent();
         String boardImageUrl = dto.getBoardImageUrl();

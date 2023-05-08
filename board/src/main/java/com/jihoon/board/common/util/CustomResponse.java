@@ -42,6 +42,11 @@ public class CustomResponse {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorBody);
     }
 
+    public static ResponseEntity<ResponseDto> signInFailed() {
+        ResponseDto errorBody = new ResponseDto("SF", "Sign In Failed");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorBody);
+    }
+
     public static ResponseEntity<ResponseDto> notExistUserEmail() {
         ResponseDto errorBody = new ResponseDto("NU", "Non-Existent User Email");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);

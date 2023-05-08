@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.jihoon.board.common.util.CustomResponse;
 import com.jihoon.board.dto.request.board.PatchBoardRequestDto;
 import com.jihoon.board.dto.request.board.PostBoardRequestDto;
+import com.jihoon.board.dto.request.board2.PostBoardRequestDto2;
 import com.jihoon.board.dto.response.ResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardListResponseDto;
 import com.jihoon.board.dto.response.board.GetBoardResponseDto;
@@ -47,20 +48,29 @@ public class BoardServiceImplement implements BoardService {
 
     @Override
     public ResponseEntity<ResponseDto> postBoard(PostBoardRequestDto dto) {
-        
-        ResponseDto body = null;
 
         String boardWriterEmail = dto.getBoardWriterEmail();
 
+        //* 성공 반환 //
+        return ;
+
+    }
+
+    @Override
+    public ResponseEntity<ResponseDto> postBoard(String userEmail, PostBoardRequestDto2 dto) {
+        
+        ResponseDto body = null;
+
         try {
             //* 존재하지 않는 유저 오류 반환 //
-            boolean existedUserEmail = userRepository.existsByEmail(boardWriterEmail);
+            boolean existedUserEmail = userRepository.existsByEmail(userEmail
+            );
             if (!existedUserEmail) {
                 ResponseDto errorBody = new ResponseDto("NU", "Non-Existent User Email");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorBody);
             }
 
-            BoardEntity boardEntity = new BoardEntity(dto);
+            BoardEntity boardEntity = new BoardEntity(userEmail, dto);
             boardRepository.save(boardEntity);
 
             body = new ResponseDto("SU", "Success");

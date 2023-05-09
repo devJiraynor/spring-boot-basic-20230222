@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.jihoon.firstproject.provider.JwtTokenProvider;
+import com.jihoon.firstproject.provider.UserRole;
 import com.jihoon.firstproject.service.MainService;
 
 @Service
@@ -30,8 +31,8 @@ public class MainServiceImplement implements MainService {
     }
 
     @Override
-    public String validJwt(String jwt) {
-        String subject = jwtTokenProvider.validate(jwt);
+    public UserRole validJwt(String jwt) {
+        UserRole subject = jwtTokenProvider.validate(jwt);
         return subject;
     }
     
